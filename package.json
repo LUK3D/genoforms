@@ -1,0 +1,24 @@
+{
+  "name": "genoforms",
+  "version": "1.0.0",
+  "description": "dynamic website generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsc configs.ts && tsc index.ts && node index.js"
+  },
+  "keywords": [
+    "htm",
+    "forms",
+    "generator",
+    "css",
+    "php",
+    "laravel",
+    "template"
+  ],
+  "author": "LUK3D",
+  "license": "ISC",
+  "dependencies": {
+    "mysql2": "^2.3.2"
+  }
+}
