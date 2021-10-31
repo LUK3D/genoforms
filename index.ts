@@ -1,7 +1,27 @@
-import SQL from "./configs"
+import SQL from "./configs";
+
+var auth = new SQL({host:"127.0.0.1",user:"root",database:"angola"})
 
 
+var formStruct = {tables:Array<Object>()};
 
-var auth = new SQL({host:"localhost",user:"root",database:"angola"})
+//Get list of tables from database
+auth.run("SELECT table_name FROM information_schema.tables WHERE table_schema = 'angola'",(error, results, fields)=>{
+    console.log("ERRO:", error)
+    //console.log("RESULT:", results)
+    formStruct.tables = results;
 
-auth.run("Select all from users")
+    formStruct.tables.forEach((table,index) => {
+        // Get list of columns from table
+        auth.run(`SHOW FULL COLUMNS FROM ${table["table_name"]}`,(error, results, fields)=>{
+            console.log("ERRO:", error)
+            //console.log("RESULT:", results)
+            table["fields"] = [...results];
+            if(index === formStruct.tables.length-1)
+                console.log(formStruct);
+        })
+
+    });
+})
+
+

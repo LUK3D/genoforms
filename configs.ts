@@ -1,3 +1,4 @@
+var mysql2 =  require("mysql2");
 /**
  * Authentication class used to create an autorization object with all necessary data.
  * @param host Hostname Ex: localhost:8080
@@ -9,6 +10,8 @@ class SQL {
   user: string;
   password: string;
   database: String;
+
+  connector:any;
   constructor({
     host,
     user,
@@ -24,10 +27,28 @@ class SQL {
     this.user = user;
     this.password = password;
     this.database = database;
+
+    this.connector = mysql2.createConnection({
+      host: this.host,
+      user: this.user,
+      password:this.password,
+      database: this.database
+    })
   }
 
-  run(query: string) {
-    console.log("Your Query: ", query, this.host,this.user);
+  /**
+   * Function for executing mysql queries based on the connection providaded
+   * @param query SQL Query that will be executed
+   * @param _callback A function that takes 3 args (error, results, fileds) 
+   */
+ async run(query: string,_callback:Function) {
+  // simple query
+  this.connector.query(
+      query,
+      function(err, results, fields) {
+        _callback(err, results, fields)
+      }
+    );
   }
 }
 
