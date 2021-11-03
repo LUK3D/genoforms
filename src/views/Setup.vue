@@ -2,7 +2,9 @@
  <div class="main w-full min-h-full  bg-black_bg-500 flex flex-col justify-center items-center">
 
 <img src="@/assets/logo.svg" class="w-2/12 my-8" alt="">
- <div class="w-2/6  bg-black_fg-500 p-10 rounded-lg shadow-2xl text-white text-center flex flex-col">
+ <div class="w-2/6  bg-black_fg-500 p-10 rounded-lg shadow-2xl text-white text-center flex flex-col relative">
+
+ <router-link to="/" class="btn btn-sm bg-white btn-circle absolute top-4 right-4"><luk_arrow_left_2/> </router-link>
     
     <p class=" border-b-2 border-dashed border-gray-500 pb-2">Almost there</p>
   
@@ -36,11 +38,11 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import {luk_layer,luk_flash_1,luk_setting_2}  from '@/assets/iconsax/index.js'; // @ is an alias to /src
+import {luk_layer,luk_flash_1,luk_setting_2,luk_arrow_left_2}  from '@/assets/iconsax/index.js'; // @ is an alias to /src
 
 @Options({
   components: {
-    luk_layer,luk_flash_1,luk_setting_2
+    luk_layer,luk_flash_1,luk_setting_2,luk_arrow_left_2
   },
 })
 export default class Home extends Vue {}
