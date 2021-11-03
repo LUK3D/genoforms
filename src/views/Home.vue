@@ -34,8 +34,8 @@
       </label>
     </div> 
         <p class="  mt-5 mb-2">By clicking on connect, you agree with our terms of use and privacy politics. </p>
-    <button class="btn btn-primary font-light text-white"><luk_flash_1 class="mx-1" /> Connect</button>
-
+    <router-link to="/setup" class="btn btn-primary font-light text-white"><luk_flash_1 class="mx-1" /> Connect</router-link>
+ 
  </div>
  
 
