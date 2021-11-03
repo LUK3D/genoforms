@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var mysql2 = require("mysql2");
 /**
  * Authentication class used to create an autorization object with all necessary data.
  * @param host Hostname Ex: localhost:8080
@@ -45,17 +44,31 @@ var mysql2 = require("mysql2");
  */
 var SQL = /** @class */ (function () {
     function SQL(_a) {
-        var host = _a.host, user = _a.user, password = _a.password, database = _a.database;
+        var host = _a.host, port = _a.port, user = _a.user, password = _a.password, database = _a.database, type = _a.type;
         this.host = host;
+        this.port = port;
         this.user = user;
         this.password = password;
         this.database = database;
-        this.connector = mysql2.createConnection({
-            host: this.host,
-            user: this.user,
-            password: this.password,
-            database: this.database
-        });
+        this.type = type;
+        if (type == "mssql") {
+            var sql_1 = require('mssql');
+            var ctx = this;
+            sql_1.connect("Server=" + host + ((port) ? ("," + port) : "") + ";Database=" + database + ";User Id=" + user + ";Password=" + password + "; Trusted_Connection=True;TrustServerCertificate=True;").then(function () {
+                console.log("Server=" + host + ((port) ? ("," + port) : "") + ";Database=" + database + ";User Id=" + user + ";Password=" + password);
+                ctx.connector = sql_1;
+                console.log(ctx.connector);
+            });
+        }
+        else {
+            var mysql2 = require("mysql2");
+            this.connector = mysql2.createConnection({
+                host: this.host,
+                user: this.user,
+                password: this.password,
+                database: this.database
+            });
+        }
     }
     /**
      * Function for executing mysql queries based on the connection providaded
@@ -64,17 +77,22 @@ var SQL = /** @class */ (function () {
      */
     SQL.prototype.run = function (query, _callback) {
         return __awaiter(this, void 0, void 0, function () {
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: 
-                    // simple query
-                    return [4 /*yield*/, this.connector.execute(query, function (err, results, fields) {
-                            _callback(err, results, fields);
-                        })];
+                    case 0:
+                        if (!(this.type == "mssql")) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.connector.query(query)];
                     case 1:
-                        // simple query
-                        _a.sent();
-                        return [2 /*return*/];
+                        result = _a.sent();
+                        _callback(result);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        this.connector.query(query, function (err, results, fields) {
+                            _callback(err, results, fields);
+                        });
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

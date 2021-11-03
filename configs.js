@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var mysql2 = require("mysql2");
 /**
  * Authentication class used to create an autorization object with all necessary data.
  * @param host Hostname Ex: localhost:8080
@@ -45,17 +44,27 @@ var mysql2 = require("mysql2");
  */
 var SQL = /** @class */ (function () {
     function SQL(_a) {
-        var host = _a.host, user = _a.user, password = _a.password, database = _a.database;
+        var host = _a.host, port = _a.port, user = _a.user, password = _a.password, database = _a.database, type = _a.type;
         this.host = host;
+        this.port = port;
         this.user = user;
         this.password = password;
         this.database = database;
-        this.connector = mysql2.createConnection({
-            host: this.host,
-            user: this.user,
-            password: this.password,
-            database: this.database
-        });
+        this.type = type;
+        if (type == "mssql") {
+            var sql = require('mssql');
+            this.connector = sql.connect("Server=" + host + ((port) ? ("," + port) : "") + ";Database=" + database + ";User Id=" + user + ";Password=" + password + ";Encrypt=true");
+            this.connector.run = this.connector.query;
+        }
+        else {
+            var mysql2 = require("mysql2");
+            this.connector = mysql2.createConnection({
+                host: this.host,
+                user: this.user,
+                password: this.password,
+                database: this.database
+            });
+        }
     }
     /**
      * Function for executing mysql queries based on the connection providaded

@@ -1,39 +1,60 @@
-var mysql2 =  require("mysql2");
+
 /**
  * Authentication class used to create an autorization object with all necessary data.
  * @param host Hostname Ex: localhost:8080
  * @param user Database username Ex: root
  * @param database The name of the database that you want to connect with
  */
-class SQL {
+ class SQL {
   host: string;
+  port:string;
   user: string;
   password: string;
-  database: String;
+  database: string;
+  type:string;
 
   connector:any;
-  constructor({
+   constructor({
     host,
+    port,
     user,
     password,
     database,
+    type,
   }: {
     host: string;
+    port?:string;
     user: string;
     password?: string;
-    database?: string;
+    database: string;
+    type?: string;
   }) {
     this.host = host;
+    this.port = port;
     this.user = user;
     this.password = password;
     this.database = database;
+    this.type = type;
 
-    this.connector = mysql2.createConnection({
-      host: this.host,
-      user: this.user,
-      password:this.password,
-      database: this.database
-    })
+    if(type == "mssql"){
+      const sql = require('mssql')
+      var ctx = this;
+       sql.connect(`Server=${host}${(port)?(","+port):""};Database=${database};User Id=${user};Password=${password}; Trusted_Connection=True;TrustServerCertificate=True;`).then(()=>{
+         console.log(`Server=${host}${(port)?(","+port):""};Database=${database};User Id=${user};Password=${password}`)
+        ctx.connector = sql;
+        console.log(ctx.connector)
+       });
+     
+    }else{
+      var mysql2 =  require("mysql2");
+      this.connector = mysql2.createConnection({
+        host: this.host,
+        user: this.user,
+        password:this.password,
+        database: this.database
+      });
+    }
+    
   }
 
   /**
@@ -43,16 +64,21 @@ class SQL {
    */
  async run(query: string,_callback:Function) {
   // simple query
-  await this.connector.execute(
+  if(this.type == "mssql"){
+    const result = await this.connector.query(query);
+    _callback(result)
+  }else{
+    this.connector.query(
       query,
       function(err, results, fields) {
         _callback(err, results, fields)
-        
       }
     );
+  }
+  
   }
 }
 
 
-
 export default SQL;
+ 

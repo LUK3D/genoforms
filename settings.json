@@ -1,0 +1,10 @@
+{
+    "compile-hero": {
+     
+      "notification-toggle": true,
+      "typescript-output-directory": "./out",
+      "typescript-output-toggle": true
+    
+    }
+  }
+  

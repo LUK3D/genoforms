@@ -1,4 +1,4 @@
-var mysql2 =  require("mysql2");
+
 /**
  * Authentication class used to create an autorization object with all necessary data.
  * @param host Hostname Ex: localhost:8080
@@ -7,33 +7,49 @@ var mysql2 =  require("mysql2");
  */
 class SQL {
   host: string;
+  port:string;
   user: string;
   password: string;
-  database: String;
+  database: string;
+  type:string;
 
   connector:any;
   constructor({
     host,
+    port,
     user,
     password,
     database,
+    type,
   }: {
     host: string;
+    port?:string;
     user: string;
     password?: string;
-    database?: string;
+    database: string;
+    type?: string;
   }) {
     this.host = host;
+    this.port = port;
     this.user = user;
     this.password = password;
     this.database = database;
+    this.type = type;
 
-    this.connector = mysql2.createConnection({
-      host: this.host,
-      user: this.user,
-      password:this.password,
-      database: this.database
-    })
+    if(type == "mssql"){
+      const sql = require('mssql')
+      this.connector = sql.connect(`Server=${host}${(port)?(","+port):""};Database=${database};User Id=${user};Password=${password};Encrypt=true`);
+      this.connector.run = this.connector.query;
+    }else{
+      var mysql2 =  require("mysql2");
+      this.connector = mysql2.createConnection({
+        host: this.host,
+        user: this.user,
+        password:this.password,
+        database: this.database
+      });
+    }
+    
   }
 
   /**
@@ -54,3 +70,4 @@ class SQL {
 
 
 export default SQL;
+ 
