@@ -1,0 +1,135 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Website.Models
+{
+    public class Cliente
+    {
+        public int ID_CLIENTES { get; set; }
+
+    }
+    public class Mod_Clientes
+    {
+
+        public List<Cliente> index()
+        {
+
+            List<Cliente> clientes = new List<Cliente>() { };
+
+            SQL.Proc("PROC_CLIENTES_CONSULTA_INDEX", null, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    Cliente cliente = new Cliente();
+                    cliente.ID_CLIENTES = int.Parse(reader["ID_CLIENTES"].ToString());
+                   
+
+                    clientes.Add(cliente);
+                }
+                return "";
+            });
+
+
+            return clientes;
+
+        }
+
+
+
+        public Cliente id(int id)
+        {
+            Cliente cliente = new Cliente();
+            List<List<dynamic>> parametros = new List<List<dynamic>>() { new List<dynamic>() { "ID", id } };
+            SQL.Proc("PROC_CLIENTES_CONSULTA_ID", parametros, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    cliente.ID_CLIENTES = int.Parse(reader["ID_CLIENTES"].ToString());
+                    cliente.NM_CLIENTE = reader["NM_CLIENTE"] as string;
+                    
+                }
+                return "";
+            });
+            return cliente;
+        }
+
+
+        public string cadastrar(string NM_CLIENTE, string IMAGEM, string OBSERVACAO, string NM_UTILIZADOR, int COD_UTILIZADOR)
+        {
+            string response = "";
+            List<List<dynamic>> parametros = new List<List<dynamic>>() {
+                new List<dynamic>() { "NM_CLIENTE", NM_CLIENTE } ,
+                new List<dynamic>() { "IMAGEM", IMAGEM } ,
+               
+            };
+            SQL.Proc("PROC_CLIENTES_CADASTRA",    parametros, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    response = reader[0].ToString();
+                }
+                return "";
+            });
+            return response;
+        }
+
+
+
+        public string atualizar(int ID_CLIENTES, string NM_CLIENTE, string IMAGEM, string OBSERVACAO, string NM_UTILIZADOR, int COD_UTILIZADOR)
+        {
+
+            string response = "";
+            List<List<dynamic>> parametros = new List<List<dynamic>>() {
+                new List<dynamic>() { "ID_CLIENTES", ID_CLIENTES } ,
+                new List<dynamic>() { "NM_CLIENTE", NM_CLIENTE } ,
+               
+            };
+
+            SQL.Proc("PROC_UTILIZADORES_ATUALIZAR", parametros, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    response = reader[0].ToString();
+                }
+                return "";
+            });
+
+            return response;
+
+        }
+
+
+
+
+
+        public string eliminar(int ID_CLIENTES, string NM_UTILIZADOR_ALT, int COD_UTILIZADOR_ALT)
+        {
+
+            string response = "";
+            List<List<dynamic>> parametros = new List<List<dynamic>>() {
+                new List<dynamic>() { "ID_CLIENTES", ID_CLIENTES } ,
+                new List<dynamic>() { "NM_UTILIZADOR_ALT", NM_UTILIZADOR_ALT } ,
+                new List<dynamic>() { "COD_UTILIZADOR_ALT", COD_UTILIZADOR_ALT }
+            };
+
+            SQL.Proc("PROC_CLIENTES_ELIMINAR", parametros, (reader) =>
+            {
+                while (reader.Read())
+                {
+                    response = reader[0].ToString();
+                }
+                return "";
+            });
+
+            return response;
+
+        }
+
+    }
+
+
+
+
+}

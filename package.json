@@ -19,6 +19,7 @@
   "author": "LUK3D",
   "license": "ISC",
   "dependencies": {
+    "fs": "0.0.1-security",
     "mssql": "^7.2.1",
     "mysql2": "^2.3.2"
   },
