@@ -1,8 +1,8 @@
 import SQL from "./gnfsql";
 import {GENO_COLUMN, GENO_SCHEMA,GENO_TABLE} from "./helpers/gnforms_schema";
 import { makeForm } from "./helpers/gnforms";
-// var auth = new SQL({host:"127.0.0.1",user:"root",database:"angola"})
-var auth = new SQL({env:"mssql",host:"LLDESWKSHP0421",user:"sa",password:"abc@123",database:"REALHOPE"})
+var auth = new SQL({host:"127.0.0.1",user:"root",database:"angola"})
+// var auth = new SQL({env:"mssql",host:"LLDESWKSHP0421",user:"sa",password:"abc@123",database:"REALHOPE"})
 
  
 /**
@@ -31,7 +31,7 @@ function getTablesFromDatabase(database:string,_callback:(tables:Array<object>)=
             _callback(results.recordset);
         })
     }else{
-        auth.run(`SELECT table_name FROM information_schema.tables WHERE table_schema = ${database}`,(error,results)=>{
+        auth.run(`SELECT table_name FROM information_schema.tables WHERE table_schema = '${database}'`,(results)=>{
             _callback(results);
         })
     }
@@ -43,16 +43,15 @@ function getTablesFromDatabase(database:string,_callback:(tables:Array<object>)=
  * @param _callback 
  */
 function getColumnsFromTables(table:string,_callback:(columns:Array<object>)=>any){
-        if(auth.env == "mssql"){
-            auth.run(`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${table}'`,(results)=>{
-                _callback(results.recordset);
-                
-            })
-        }else{
-             auth.run(`SHOW FULL COLUMNS FROM = '${table}'`,(results)=>{
+     
+        auth.run(`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${table}'`,(results)=>{
+            if(auth.env == "mssql"){
                 _callback(results["fields"]);
-            })
-        }
+            }else{
+                _callback(results);
+            }
+        })
+        
 }
 
 
@@ -90,6 +89,31 @@ function getColumnsFromTables(table:string,_callback:(columns:Array<object>)=>an
 
 
 setTimeout(() => {
+
+    getTablesFromDatabase("angola",(tables)=>{
+    
+        var tables_tmp:Array<GENO_TABLE> = [];
+            for(let e = 0; e < tables.length; e++){
+
+                getColumnsFromTables(tables[e]["table_name"],(columns)=>{
+                    console.log("Colunas",columns)
+                   if(columns){
+                    var table:GENO_TABLE = new GENO_TABLE({name:tables[e]["table_name"],columns:columns.map(x=>new GENO_COLUMN({name:x["COLUMN_NAME"],type:x["DATA_TYPE"],def:x["COLUMN_DEFAULT"],is_nullable:x["IS_NULLABLE"],char_max:x["CHARACTER_MAXIMUM_LENGTH"]||x["CHARACTER_MAXIMUM_LENGTH"]}))});
+                    tables_tmp.push(table);
+                   }
+
+                   if(e == tables.length-1){
+                    var gns:GENO_SCHEMA = new GENO_SCHEMA({database:"REALHOPE",tables:tables_tmp,lang:"php"})
+                        makeForm(gns);
+                    }
+                })
+
+                
+            }
+            
+            
+        })
+    return ;
     getTablesFromDatabase("REALHOPE",(tables)=>{
     
         var tables_tmp:Array<GENO_TABLE> = [];

@@ -1,7 +1,24 @@
-# GenoForms project
-We are making an awesome website builder that you can use to create your projects as fast as possible.
+# genoforms
 
-|Task|Description|Status|
-|----|-----------|------|
-|Mysql Connector| Create an interface for conecting to mysql databases and generate a form object from the database schema|❎|
-|SSQL Connector| Create an interface for conecting to Sql Server databases and generate a form object from the database schema|❎|
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

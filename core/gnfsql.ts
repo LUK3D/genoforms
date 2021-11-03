@@ -51,6 +51,7 @@
         password:this.password,
         database: this.database
       });
+      console.log("Connected: ", this.connector)
     }
     
   }
@@ -69,7 +70,7 @@
     this.connector.query(
       query,
       function(err, results, fields) {
-        _callback(err, results, fields)
+        _callback(results)
       }
     );
   }
