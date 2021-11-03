@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc configs.ts && tsc index.ts && node index.js"
+    "dev": "tsc gnfsql.ts && tsc index.ts && node index.js"
   },
   "keywords": [
     "htm",

@@ -9,9 +9,13 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 exports.__esModule = true;
-var configs_1 = require("./configs");
-var auth = new configs_1["default"]({ host: "127.0.0.1", user: "root", database: "angola" });
+var gnfsql_1 = require("./gnfsql");
+var auth = new gnfsql_1["default"]({ host: "127.0.0.1", user: "root", database: "angola" });
 var formStruct = { tables: Array() };
+// Get list of databases on the connection
+auth.run("SHOW DATABASES", function (error, results) {
+    console.log("DATABASES: ", results);
+});
 //Get list of tables from database
 auth.run("SELECT table_name FROM information_schema.tables WHERE table_schema = 'angola'", function (error, results, fields) {
     console.log("ERRO:", error);

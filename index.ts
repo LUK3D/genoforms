@@ -1,9 +1,14 @@
-import SQL from "./configs";
+import SQL from "./gnfsql";
 
 var auth = new SQL({host:"127.0.0.1",user:"root",database:"angola"})
 
 
 var formStruct = {tables:Array<Object>()};
+
+// Get list of databases on the connection
+auth.run("SHOW DATABASES",(error,results)=>{
+    console.log("DATABASES: ", results);
+})
 
 //Get list of tables from database
 auth.run("SELECT table_name FROM information_schema.tables WHERE table_schema = 'angola'",(error, results, fields)=>{
@@ -20,7 +25,6 @@ auth.run("SELECT table_name FROM information_schema.tables WHERE table_schema = 
             if(index === formStruct.tables.length-1)
                 console.log(formStruct);
         })
-
     });
 })
 
