@@ -44,20 +44,18 @@ exports.__esModule = true;
  */
 var SQL = /** @class */ (function () {
     function SQL(_a) {
-        var host = _a.host, port = _a.port, user = _a.user, password = _a.password, database = _a.database, type = _a.type;
+        var host = _a.host, port = _a.port, user = _a.user, password = _a.password, database = _a.database, env = _a.env;
         this.host = host;
         this.port = port;
         this.user = user;
         this.password = password;
         this.database = database;
-        this.type = type;
-        if (type == "mssql") {
+        this.env = env;
+        if (env == "mssql") {
             var sql_1 = require('mssql');
             var ctx = this;
             sql_1.connect("Server=" + host + ((port) ? ("," + port) : "") + ";Database=" + database + ";User Id=" + user + ";Password=" + password + "; Trusted_Connection=True;TrustServerCertificate=True;").then(function () {
-                console.log("Server=" + host + ((port) ? ("," + port) : "") + ";Database=" + database + ";User Id=" + user + ";Password=" + password);
                 ctx.connector = sql_1;
-                console.log(ctx.connector);
             });
         }
         else {
@@ -81,7 +79,7 @@ var SQL = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(this.type == "mssql")) return [3 /*break*/, 2];
+                        if (!(this.env == "mssql")) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.connector.query(query)];
                     case 1:
                         result = _a.sent();

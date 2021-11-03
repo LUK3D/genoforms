@@ -9,13 +9,37 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var gnfsql_1 = require("./gnfsql");
 // var auth = new SQL({host:"127.0.0.1",user:"root",database:"angola"})
-var auth = new gnfsql_1["default"]({ type: "mssql", host: "LLDESWKSHP0421", user: "sa", password: "abc@123", database: "REALHOPE" });
+var auth = new gnfsql_1["default"]({ env: "mssql", host: "LLDESWKSHP0421", user: "sa", password: "abc@123", database: "REALHOPE" });
 var formStruct = { tables: Array() };
-if (auth.type != 'mssql') {
-    // Get list of databases on the connection
-    auth.run("SHOW DATABASES", function (error, results) {
-        console.log("DATABASES: ", results);
-    });
+/**
+ * Get list of databases on the connection
+ * @param _callback Callback function that returns the set of databases as an argument.
+ */
+function getDatabases(_callback) {
+    if (auth.env == "mssql") {
+        auth.run("SELECT name FROM master.dbo.sysdatabases", function (results) {
+            _callback(results.recordset);
+        });
+    }
+    else {
+        auth.run("SHOW DATABASES", function (error, results) {
+            _callback(results);
+        });
+    }
+}
+function getTablesFromDatabase(table, _callback) {
+    if (auth.env == "mssql") {
+        auth.run("SELECT table_name FROM [" + table + "].INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'", function (results) {
+            _callback(results.recordset);
+        });
+    }
+    else {
+        auth.run("SELECT table_name FROM information_schema.tables WHERE table_schema = " + table, function (error, results) {
+            _callback(results);
+        });
+    }
+}
+if (auth.env != 'mssql') {
     //Get list of tables from database
     auth.run("SELECT table_name FROM information_schema.tables WHERE table_schema = 'angola'", function (error, results, fields) {
         console.log("ERRO:", error);
@@ -34,9 +58,16 @@ if (auth.type != 'mssql') {
     });
 }
 else {
-    setTimeout(function () {
-        auth.run("SELECT name FROM master.dbo.sysdatabases", function (results) {
-            console.log("DATABASES: ", results);
-        });
-    }, 500);
 }
+setTimeout(function () {
+    getDatabases(function (databases) {
+        var _loop_1 = function (index) {
+            getTablesFromDatabase(databases[index].name, function (tables) {
+                console.log({ "Database": databases[index].name, tables: tables });
+            });
+        };
+        for (var index = 0; index < databases.length; index++) {
+            _loop_1(index);
+        }
+    });
+}, 500);

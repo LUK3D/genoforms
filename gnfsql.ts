@@ -11,7 +11,7 @@
   user: string;
   password: string;
   database: string;
-  type:string;
+  env:string;
 
   connector:any;
    constructor({
@@ -20,29 +20,27 @@
     user,
     password,
     database,
-    type,
+    env,
   }: {
     host: string;
     port?:string;
     user: string;
     password?: string;
     database: string;
-    type?: string;
+    env?: string;
   }) {
     this.host = host;
     this.port = port;
     this.user = user;
     this.password = password;
     this.database = database;
-    this.type = type;
+    this.env = env;
 
-    if(type == "mssql"){
+    if(env == "mssql"){
       const sql = require('mssql')
       var ctx = this;
        sql.connect(`Server=${host}${(port)?(","+port):""};Database=${database};User Id=${user};Password=${password}; Trusted_Connection=True;TrustServerCertificate=True;`).then(()=>{
-         console.log(`Server=${host}${(port)?(","+port):""};Database=${database};User Id=${user};Password=${password}`)
         ctx.connector = sql;
-        console.log(ctx.connector)
        });
      
     }else{
@@ -64,7 +62,7 @@
    */
  async run(query: string,_callback:Function) {
   // simple query
-  if(this.type == "mssql"){
+  if(this.env == "mssql"){
     const result = await this.connector.query(query);
     _callback(result)
   }else{
