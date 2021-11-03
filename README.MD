@@ -1,3 +1,10 @@
+![genoforms image](shot_01.png)
+
+# Welcome to next generation website builder
+
+The idea is to build a complete CRUD MVC Project based on database.
+
+
 # genoforms
 
 ## Project setup
