@@ -8,11 +8,11 @@
     
     <p class=" border-b-2 border-dashed border-gray-500 pb-2">Almost there</p>
   
-    <div class="form-control my-2 w-full">
-      <label class="input-group w-full">
+    <div class="form-control my-2 w-full ">
+      <label class="input-group w-11/12">
         <span class="bg-white "><luk_layer/></span> 
-      <select class="select  w-full max-w-xs text-gray-600 font-light">
-        <option disabled="disabled" selected="selected">Choose a Database</option> 
+      <select style="" class="select  w-full  text-gray-600 font-light">
+        <option  disabled="disabled" selected="selected">Choose a Database</option> 
         <option>Test1</option> 
         <option>Test2</option> 
         <option>Test3</option>
@@ -28,7 +28,7 @@
         </label>
       </div>
     </div>
-    <router-link to="/setup" class="btn btn-primary font-light text-white normal-case"><luk_setting_2 class="mx-2" /> Start Building</router-link>
+    <router-link to="/editor" class="btn btn-primary font-light text-white normal-case"><luk_setting_2 class="mx-2" /> Start Building</router-link>
  
  </div>
  
