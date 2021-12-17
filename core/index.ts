@@ -161,39 +161,39 @@ setTimeout(() => {
     ];
 
 
-    getProceduresFromDatabase("MASI_TESTES",(procedures)=>{
-        var final = [];
-        procedures.forEach(el => {
-            var v1 = el.ROUTINE_DEFINITION.split(/^\s*\n/gm).join("");
-            v1 = v1.split("CREATE").join("\nCREATE");
+//     getProceduresFromDatabase("MASI_TESTES",(procedures)=>{
+//         var final = [];
+//         procedures.forEach(el => {
+//             var v1 = el.ROUTINE_DEFINITION.split(/^\s*\n/gm).join("");
+//             v1 = v1.split("CREATE").join("\nCREATE");
 
-            var newCols = [];
+//             var newCols = [];
 
-            new_tables.forEach(column => {
-                newCols.push(`@${column.name} ${column.type}`)
-            });
+//             new_tables.forEach(column => {
+//                 newCols.push(`@${column.name} ${column.type}`)
+//             });
 
             
-            v1 = v1.split(/(\] @ID)/mg).join(']\t'+newCols.join(',\n\t')+'\t@ID');
-            v1 =  v1.split(/(^\s*@ID).[a-zA-Z]* /mgs).join('\n\t'+newCols.join(',\n\t')+',\t@ID');
+//             v1 = v1.split(/(\] @ID)/mg).join(']\t'+newCols.join(',\n\t')+'\t@ID');
+//             v1 =  v1.split(/(^\s*@ID).[a-zA-Z]* /mgs).join('\n\t'+newCols.join(',\n\t')+',\t@ID');
 
-            v1 = v1.split('@ID]').join(',\n').split('	,\n ,').join(',').split(')	@').join('),\n\t@');
-            v1 = v1.replace(/^(.*?)$\s+?^(?=.*^\1$)/gms,'\n');
+//             v1 = v1.split('@ID]').join(',\n').split('	,\n ,').join(',').split(')	@').join('),\n\t@');
+//             v1 = v1.replace(/^(.*?)$\s+?^(?=.*^\1$)/gms,'\n');
 
-            if(final.indexOf(v1)==-1){
-                final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
-                final.push(v1);
-                final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
-            }
+//             if(final.indexOf(v1)==-1){
+//                 final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+//                 final.push(v1);
+//                 final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+//             }
             
-        });
+//         });
 
-        logFile(final.join("\n"));
-        //logFile(JSON.stringify(procedures))
-        // console.log(procedures);
-    })
+//         logFile(final.join("\n"));
+//         //logFile(JSON.stringify(procedures))
+//         // console.log(procedures);
+//     })
 
-return ;
+// return ;
 
     var sqlStringWithRef = "ALTER TABLE {TABLE} ADD {COLUMN} {COLUMN_TYPE} {DEFAULT} REFERENCES {FOREIGN_TABLE}({FOREIGN_ID});"
     var sqlString = "ALTER TABLE {TABLE} ADD {COLUMN} {COLUMN_TYPE} {DEFAULT};"
@@ -205,7 +205,7 @@ return ;
         for (let i = 0; i < tables.length; i++) {
             const element = tables[i];
             let tmpSql = [];
-            if(element.table_name !="UTILIZADORES"){
+            if(element.table_name =="UTILIZADORES"){
 
                 new_tables.forEach(el => {
                     let sqltmp;

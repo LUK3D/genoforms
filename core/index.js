@@ -1,7 +1,6 @@
 "use strict";
 exports.__esModule = true;
 var gnfsql_1 = require("./gnfsql");
-var gnforms_1 = require("./helpers/gnforms");
 // var auth = new SQL({host:"127.0.0.1",user:"root",database:"angola"})
 var auth = new gnfsql_1["default"]({ env: "mssql", host: "LLDESWKSHP0421", user: "sa", password: "abc@123", database: "REALHOPE" });
 /**
@@ -119,30 +118,30 @@ setTimeout(function () {
         { name: "DT_CAD", type: "datetime2(7)", "default": "getdate()" },
         { name: "DT_ALT", type: "datetime2(7)", "default": "getdate()" },
     ];
-    getProceduresFromDatabase("MASI_TESTES", function (procedures) {
-        var final = [];
-        procedures.forEach(function (el) {
-            var v1 = el.ROUTINE_DEFINITION.split(/^\s*\n/gm).join("");
-            v1 = v1.split("CREATE").join("\nCREATE");
-            var newCols = [];
-            new_tables.forEach(function (column) {
-                newCols.push("@" + column.name + " " + column.type);
-            });
-            v1 = v1.split(/(\] @ID)/mg).join(']\t' + newCols.join(',\n\t') + '\t@ID');
-            v1 = v1.split(/(^\s*@ID).[a-zA-Z]* /mgs).join('\n\t' + newCols.join(',\n\t') + ',\t@ID');
-            v1 = v1.split('@ID]').join(',\n').split('	,\n ,').join(',').split(')	@').join('),\n\t@');
-            v1 = v1.replace(/^(.*?)$\s+?^(?=.*^\1$)/gms, '\n');
-            if (final.indexOf(v1) == -1) {
-                final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-                final.push(v1);
-                final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-            }
-        });
-        gnforms_1.logFile(final.join("\n"));
-        //logFile(JSON.stringify(procedures))
-        // console.log(procedures);
-    });
-    return;
+    //     getProceduresFromDatabase("MASI_TESTES",(procedures)=>{
+    //         var final = [];
+    //         procedures.forEach(el => {
+    //             var v1 = el.ROUTINE_DEFINITION.split(/^\s*\n/gm).join("");
+    //             v1 = v1.split("CREATE").join("\nCREATE");
+    //             var newCols = [];
+    //             new_tables.forEach(column => {
+    //                 newCols.push(`@${column.name} ${column.type}`)
+    //             });
+    //             v1 = v1.split(/(\] @ID)/mg).join(']\t'+newCols.join(',\n\t')+'\t@ID');
+    //             v1 =  v1.split(/(^\s*@ID).[a-zA-Z]* /mgs).join('\n\t'+newCols.join(',\n\t')+',\t@ID');
+    //             v1 = v1.split('@ID]').join(',\n').split('	,\n ,').join(',').split(')	@').join('),\n\t@');
+    //             v1 = v1.replace(/^(.*?)$\s+?^(?=.*^\1$)/gms,'\n');
+    //             if(final.indexOf(v1)==-1){
+    //                 final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+    //                 final.push(v1);
+    //                 final.push("--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+    //             }
+    //         });
+    //         logFile(final.join("\n"));
+    //         //logFile(JSON.stringify(procedures))
+    //         // console.log(procedures);
+    //     })
+    // return ;
     var sqlStringWithRef = "ALTER TABLE {TABLE} ADD {COLUMN} {COLUMN_TYPE} {DEFAULT} REFERENCES {FOREIGN_TABLE}({FOREIGN_ID});";
     var sqlString = "ALTER TABLE {TABLE} ADD {COLUMN} {COLUMN_TYPE} {DEFAULT};";
     var finalSql = [];
@@ -150,7 +149,7 @@ setTimeout(function () {
         var _loop_1 = function (i) {
             var element = tables[i];
             var tmpSql = [];
-            if (element.table_name != "UTILIZADORES") {
+            if (element.table_name == "UTILIZADORES") {
                 new_tables.forEach(function (el) {
                     var sqltmp;
                     if (el.reference) {
